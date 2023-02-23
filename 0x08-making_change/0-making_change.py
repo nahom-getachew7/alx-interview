@@ -14,16 +14,18 @@ def makeChange(coins, total):
     '''
     if total <= 0:
         return 0
-    table = [sys.maxsize for i in range(total + 1)]
-    table[0] = 0
-    m = len(coins)
-    for i in range(1, total + 1):
-        for j in range(m):
-            if coins[j] <= i:
-                subres = table[i - coins[j]]
-                if subres != sys.maxsize and subres + 1 < table[i]:
-                    table[i] = subres + 1
+    else:
+        from math import trunc
 
-    if table[total] == sys.maxsize:
-        return -1
-    return table[total]
+        coins = sorted(coins, reverse=True)
+        coin_dict = {}
+        while total is not None:
+            for c in coins:
+                if total % c == 0:
+                    coin_dict[c] = total / c
+                    return(int(sum(coin_dict.values())))
+                else:
+                    coin_dict[c] = trunc(total / float(c))
+                    total -= (c * coin_dict[c])
+            return -1
+
