@@ -27,5 +27,5 @@ def makeChange(coins, total):
                 else:
                     coin_dict[c] = trunc(total / float(c))
                     total -= (c * coin_dict[c])
-            return -1
+                    return -1
 
