@@ -1,38 +1,56 @@
 #!/usr/bin/python3
-'''Prime Game'''
+
+""" Prime Game Algorithm Python """
+
+
+def is_prime(n):
+    """ Checks if a number given n is a prime number """
+    for i in range(2, int(n ** 0.5) + 1):
+        if not n % i:
+            return False
+    return True
+
+
+def calculate_primes(n, primes):
+    """ Calculate all primes """
+    top_prime = primes[-1]
+    if n > top_prime:
+        for i in range(top_prime + 1, n + 1):
+            if is_prime(i):
+                primes.append(i)
+            else:
+                primes.append(0)
 
 
 def isWinner(x, nums):
-    def get_primes(n):
-        """
-        Returns a list of primes up to and including n
-        """
-        sieve = [True] * (n+1)
-        sieve[0] = sieve[1] = False
-        for i in range(2, int(n**0.5)+1):
-            if sieve[i]:
-                sieve[i*i::i] = [False] * ((n-i*i)//i + 1)
-        return [i for i in range(n+1) if sieve[i]]
+    """
+    x is the number of rounds and nums is an array of n
+    Return: name of the player that won the most rounds
+    If the winner cannot be determined, return None
+    You can assume n and x will not be larger than 10000
+    """
 
-    def play_game(n):
-        """
-        Returns the winner of a game played with the integers from 1 to n
-        """
-        primes = get_primes(n)
-        if len(primes) % 2 == 0:
-            return "Ben"
+    players_wins = {"Maria": 0, "Ben": 0}
+
+    primes = [0, 0, 2]
+
+    calculate_primes(max(nums), primes)
+
+    for round in range(x):
+        sum_options = sum((i != 0 and i <= nums[round])
+                          for i in primes[:nums[round] + 1])
+
+        if (sum_options % 2):
+            winner = "Maria"
         else:
-            return "Maria"
+            winner = "Ben"
 
-    wins = {"Maria": 0, "Ben": 0}
+        if winner:
+            players_wins[winner] += 1
 
-    for i in range(x):
-        winner = play_game(nums[i])
-        wins[winner] += 1
-
-    if wins["Maria"] == wins["Ben"]:
-        return None
-    elif wins["Maria"] > wins["Ben"]:
+    if players_wins["Maria"] > players_wins["Ben"]:
         return "Maria"
-    else:
+    elif players_wins["Ben"] > players_wins["Maria"]:
         return "Ben"
+
+    return None
